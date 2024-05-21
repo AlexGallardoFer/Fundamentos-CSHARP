@@ -14,7 +14,8 @@ class Program
     static void Main(string[] args)
     {
         Console.Clear();
-        DeclaracionVariables();
+        //DeclaracionVariables();
+        ConversionVariables();
     }
 
     /// <summary>
@@ -78,5 +79,37 @@ class Program
 
         Console.WriteLine($"Tipo 5: {alumno5.GetType()}");
         Console.WriteLine($"Nombre 5: {alumno5.Nombre}\n");
+    }
+
+    /// <summary>
+    /// Conversión de variables
+    /// </summary>
+    static void ConversionVariables()
+    {
+        byte num1 = 10;         //  8 bits
+        int num2 = 32;          // 32 bits
+        string num3 = "42";     // bits variables según contenido
+
+        Console.WriteLine($"Num1: {num1} - Num2: {num2} - Num3: {num3}");
+
+        // Conversión Implicita, SI es posible si el receptor es de mayor tamaño en bits
+        num2 = num1;
+
+        // Conversión Implicita, NO es posible si el receptro es de menor tamaño en bits
+        //num1 = num2;
+
+        // La opción es una conversión Explicita, indicada por el programador
+        // Es válida si el valor está comprendido entre los valores de la variable receptora
+        num2 = 1532;
+        num1 = (byte)num2;
+
+        // Conversión explicita, utilizando los métodos del objeto CONVERT
+        // Para valores fuera del rango de la variable receptora genera una excepción
+        num2 = 32;
+        num1 = Convert.ToByte(num2);
+        num1 = Convert.ToByte(num3);
+
+        Console.WriteLine("Después de la conversión");
+        Console.WriteLine($"Num1 (byte): {num1} - Num2 (int): {num2} - Num3 (string): {num3}");
     }
 }
