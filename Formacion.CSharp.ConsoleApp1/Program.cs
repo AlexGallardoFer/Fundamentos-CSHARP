@@ -1,5 +1,4 @@
 ﻿using Formacion.CSharp.ConsoleApp1.Models;
-using Microsoft.VisualBasic;
 
 namespace Formacion.CSharp.ConsoleApp1;
 /// <summary>
@@ -15,7 +14,8 @@ class Program
     {
         Console.Clear();
         //DeclaracionVariables();
-        ConversionVariables();
+        //ConversionVariables();
+        SentenciasControl();
     }
 
     /// <summary>
@@ -110,6 +110,190 @@ class Program
         num1 = Convert.ToByte(num3);
 
         Console.WriteLine("Después de la conversión");
-        Console.WriteLine($"Num1 (byte): {num1} - Num2 (int): {num2} - Num3 (string): {num3}");
+        Console.WriteLine($"Num1 (byte): {num1} - Num2 (int): {num2} - Num3 (string): {num3}\n");
+
+        ///////////////////////////////////////////////////////////////////
+        // Transformaciones de STRING a cualquier tipo de dato numérico  //
+        ///////////////////////////////////////////////////////////////////
+
+        // Utilizando los métodos del objeto CONVERT
+        num1 = Convert.ToByte(num3);
+        num2 = Convert.ToInt32(num3);
+
+        // Conversión explícita, utilizando el método Parse
+        num1 = byte.Parse(num3);
+
+        // Conversión explícita, utilizando el método TryParse
+        byte.TryParse(num3, out num1);
+
+
+        // El método .TryParse() retorna TRUE/FALSE dependiendo de si la trasnformación es posible
+        // El resultado de la transformación se almacena en num4, siendo 0 si la transformación no es posible
+        num3 = "102";
+        int num4;
+        bool result = int.TryParse(num3, out num4);
+        Console.WriteLine($"Resultado: {result} - Valor num4: {num4}\n");
+
+
+        // En este ejemplo solo comprobamos si la transformación es posible
+        // Mediante [out _] indicamos que no queremos el resultado de la transformación
+        bool num5 = int.TryParse(num3, out _);
+        Console.WriteLine($"Resultado: {result} - Valor num5: {num5}\n");
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    static void SentenciasControl()
+    {
+        // Uso de IF/ELSE
+        Reserva reserva = new Reserva();
+
+        Console.Write("ID de la reserva: ");
+        reserva.id = Console.ReadLine();
+
+        Console.Write("Nombre del cliente: ");
+        reserva.cliente = Console.ReadLine();
+
+        Console.Write("Tipo de reserva: (100, 200, 300, 400) ");
+        // Opcion A
+        string respuesta = Console.ReadLine();
+        int.TryParse(respuesta, out reserva.tipo);
+
+        // Opcion B
+        //int.TryParse(Console.ReadLine(), out reserva.tipo);
+
+        Console.Write("Es fumador? (Sí o No) ");
+        string fumador = Console.ReadLine();
+
+        // Opción 1, utilizando IF/ELSE
+        if (fumador.ToLower().Trim() == "si" || fumador.ToLower().Trim() == "sí")
+            reserva.fumador = true;
+        else
+            reserva.fumador = false;
+
+        // Opción 2, utilizando IF/ELSE-IF
+        if (fumador.ToLower().Trim() == "si" || fumador.ToLower().Trim() == "sí")
+            reserva.fumador = true;
+        else if (fumador.ToLower().Trim() == "no")
+            reserva.fumador = false;
+        else
+        {
+            reserva.fumador = false;
+            Console.WriteLine($"El valor {fumador} no es válido pero se asigna habitación de no fumador");
+        }
+        // Opción 3, asignación condicional con ? :
+        reserva.fumador = (fumador.ToLower().Trim() == "si" || fumador.ToLower().Trim() == "sí") ? true : false;
+
+        // Opción 4, utilizando SWITCH
+        switch(fumador.ToLower().Trim())
+        {
+            case "si":
+                reserva.fumador = true;
+                break;
+            case "sí":
+                reserva.fumador = true;
+                break;
+            case "no":
+                reserva.fumador = false;
+                break;
+            default:
+                reserva.fumador = false;                
+                Console.WriteLine($"El valor {fumador} no es válido pero se asigna habitación de no fumador");
+                break;
+        }
+        Console.Clear();
+        Console.Write($"ID de la reserva: ".PadLeft(15, ' '));
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine(reserva.id);
+        Console.ForegroundColor = ConsoleColor.White;
+
+        Console.Write($"Cliente: ".PadLeft(15, ' '));
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine(reserva.cliente);
+        Console.ForegroundColor = ConsoleColor.White;
+
+        // Pintar el tipo de habitación
+        // 100 -> Habitación individual
+        // 200 -> Habitación doble
+        // 300 -> Habitación Junior Suite
+        // 400 -> Habitación Suite (cyan)
+        // xxx -> tipo de habitación desconocido (rojo)
+
+        Console.Write("IF -> Tipo: ".PadLeft(15, ' '));
+        // IF/ELSE/IF
+        if (respuesta == "100")
+            Console.WriteLine("Habitación Individual.");
+        else if (respuesta == "200")
+            Console.WriteLine("Habitación Doble.");
+        else if (respuesta == "300")
+            Console.WriteLine("Habitación Junior SUITE.");
+        else if (respuesta == "400")
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;              
+            Console.WriteLine("Habitación SUITE.");
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Red;  
+            Console.WriteLine($"Tipo de habitación <{respuesta}> desconocido.");
+        }
+        Console.ForegroundColor = ConsoleColor.White;
+
+        // SWITCH
+        Console.Write("SWITCH -> Tipo: ".PadLeft(15, ' '));
+        switch(respuesta)
+        {
+            case "100":
+                Console.WriteLine("Habitación Individual.");
+                break;
+            case "200":
+                Console.WriteLine("Habitación Doble.");
+                break;
+            case "300":
+                Console.WriteLine("Habitación Junior SUITE.");
+                break;
+            case "400":
+                Console.ForegroundColor = ConsoleColor.Cyan;              
+                Console.WriteLine("Habitación SUITE.");
+                break;
+            default:
+                Console.ForegroundColor = ConsoleColor.Red;  
+                Console.WriteLine($"Tipo de habitación <{respuesta}> desconocido.");
+                break;
+        }
+        Console.ForegroundColor = ConsoleColor.White;
+
+        // Pintar si es fumador
+        // true -> si
+        // false -> no
+
+        // Asignador condicional (condicion) ? "Sí" : "No"
+        Console.Write("Es fumador? ");
+        Console.ForegroundColor = reserva.fumador ? ConsoleColor.Red : ConsoleColor.Green;
+        Console.WriteLine(reserva.fumador ? "Sí" : "No");
+        Console.ForegroundColor = ConsoleColor.White;
+    }
+
+    static void SentenciasRepeticion()
+    {
+        string[] frutas = {"naranja", "limón", "pomelo", "lima"};
+        object[] objetos = {"naranja", 10, new Alumno(), new Reserva()};
+
+        // Recorremos una colección con un contador FOR
+        // Mostramos el contenido de Array utilizando la posición de los elementos
+        // Python: for i in range(0, i < len(frutas), i += 1)
+        
+        // Opción 1a
+        for(int i = 0; i < frutas.Length; i++)
+        {
+            Console.WriteLine($"Posición {i} -> {frutas[i]}");
+        }
+        Console.WriteLine("");
+
+        // Opción 1b
+        for(int i = 0; i < frutas.Length; i++)
+            Console.WriteLine($"Posición {i} -> {frutas[i]}");
+        Console.WriteLine("");
     }
 }
