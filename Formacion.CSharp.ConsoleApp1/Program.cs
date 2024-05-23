@@ -15,7 +15,9 @@ class Program
         Console.Clear();
         //DeclaracionVariables();
         //ConversionVariables();
-        SentenciasControl();
+        //SentenciasControl();
+        //SentenciasRepeticion();
+        ControlExcepciones();
     }
 
     /// <summary>
@@ -295,5 +297,169 @@ class Program
         for(int i = 0; i < frutas.Length; i++)
             Console.WriteLine($"Posición {i} -> {frutas[i]}");
         Console.WriteLine("");
+
+        // Recorremos una colección con un contador FOREACH
+        // Mostramos el contenido de Array utilizando los valores de los elementos
+        // Python: for fruta in frutas
+        
+        // Opción 1a
+        foreach(string fruta in frutas)
+        {
+            Console.WriteLine($"-> {fruta}");
+        }
+        Console.WriteLine("");
+
+        // Recorremos una colección con un contador WHILE
+        // Opción 1
+        int contador = 0;
+        while (contador < frutas.Length)
+        {
+            Console.WriteLine($"Posición {contador} -> {frutas[contador]}");
+            contador++;
+        }
+        Console.WriteLine("");
+
+        // Opción2
+        contador = 0;
+        while (true)
+        {
+            Console.WriteLine($"Posición {contador} -> {frutas[contador]}");
+            contador++;
+            if(contador >= frutas.Length) break;
+        }
+        Console.WriteLine("");
+
+
+        // Recorremos una colección con un contador DO/WHILE
+        contador = 0;
+        do
+        {
+            Console.WriteLine($"Posición {contador} -> {frutas[contador]}");
+            contador++;
+        }while(contador < frutas.Length);
+
+        Console.WriteLine("");
+
+        //////////////////////////////////////////////////////////
+        
+        decimal[] numeros = {10, 5, 345, 52, 13, 1000, 83};
+
+        decimal suma = 0;
+        decimal max = 0;
+        decimal min = numeros[0];
+
+
+        // FOR
+        for(int i = 0; i < numeros.Length; i++)
+        {
+            suma += numeros[i];
+            if(numeros[i] > max) max = numeros[i];
+            if(numeros[i] < min) min = numeros[i];
+        }        
+
+        // Mostramos la suma y la media, el número mayor y el menor
+        Console.WriteLine($"FOR: Suma total: {suma}");
+        Console.WriteLine($"FOR: Media: {(suma/numeros.Length).ToString("N2")}");
+        Console.WriteLine($"FOR: Número mayor: {max}");
+        Console.WriteLine($"FOR: Número menor: {min}\n");
+
+        // FOREACH
+        suma = 0;
+        max = 0;
+        min = numeros[0];
+        foreach(decimal numero in numeros)
+        {
+            suma += numero;
+            if(numero > max) max = numero;
+            if(numero < min) min = numero;
+        }
+        Console.WriteLine($"FOREACH: Suma total: {suma}");
+        Console.WriteLine($"FOREACH: Media: {(suma/numeros.Length).ToString("N2")}");
+        Console.WriteLine($"FOREACH: Número mayor: {max}");
+        Console.WriteLine($"FOREACH: Número menor: {min}\n");
+
+
+        // WHILE
+        suma = 0;
+        max = 0;
+        min = numeros[0];
+        contador = 0;
+        while(contador < numeros.Length)
+        {
+            suma += numeros[contador];
+            if(numeros[contador] > max) max = numeros[contador];
+            if(numeros[contador] < min) min = numeros[contador];
+            contador++;
+        }
+        Console.WriteLine($"WHILE: Suma total: {suma}");
+        Console.WriteLine($"WHILE: Media: {(suma/numeros.Length).ToString("N2")}");
+        Console.WriteLine($"WHILE: Número mayor: {max}");
+        Console.WriteLine($"WHILE: Número menor: {min}\n");
+
+        // Ejemplo de obtener información con métodos de LINQ
+        Console.WriteLine($"LINQ: Suma total: {numeros.Sum()}");
+        Console.WriteLine($"LINQ: Media: {numeros.Average().ToString("N2")}");
+        Console.WriteLine($"LINQ: Número mayor: {numeros.Max()}");
+        Console.WriteLine($"LINQ: Número menor: {numeros.Min()}\n");
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    static void ControlExcepciones()
+    {
+        // EJEMPLO EN PYTHON
+        // numero1 = 5
+        // numero2 = 100
+
+        // try:    
+        //     numero3 = numero2 / numero1
+        //     print(f"Valor de número 3: {numero3}")
+
+        //     f = open("miFichero.txt")
+        // except ZeroDivisionError as err:
+        //     print(f"-> {err}")
+        //     print(f"-> {type(err)}")
+        // except FileNotFoundError as err:
+        //     print(f"-> {err}")
+        //     print(f"-> {type(err)}")
+        // except Exception as err:
+        //     print(f"{err}")
+        //     print(f"{type(err)}")
+        // finally:
+        //     print(f"F I N")
+
+
+        int numero1 = 5;
+        int numero2 = 100;
+
+        try
+        {
+            int numero3 = numero2 / numero1;
+            Console.WriteLine($"El valor de número 3 es {numero3}");
+        }
+        catch (DivideByZeroException err)
+        {
+            Console.WriteLine("Excepción específica");
+            Console.WriteLine($"Mensaje: {err.Message}");
+            Console.WriteLine($"Tipo: {err.GetType()}");
+        }
+        catch (FileNotFoundException err)
+        {
+            Console.WriteLine("Excepción específica");
+            Console.WriteLine($"Mensaje: {err.Message}");
+            Console.WriteLine($"Tipo: {err.GetType()}");
+        }
+        catch (Exception err)
+        {   
+            Console.WriteLine("Excepción genérica");
+            Console.WriteLine($"Mensaje: {err.Message}");
+            Console.WriteLine($"Tipo: {err.GetType()}");
+            //throw;
+        }
+        finally
+        {
+            Console.WriteLine("FIN");
+        }
     }
 }
