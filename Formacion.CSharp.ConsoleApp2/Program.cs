@@ -6,15 +6,15 @@ class Program
 {
     static void Main(string[] args)
     {
-        Alumno alumno = new Alumno();
-        alumno.Nombre = "Alejandro";
-        alumno.Apellidos = "Gallardo";
-        alumno.Edad = 27;
-        alumno.CambiaEdad = 3;
+        var alumno = new Alumno() { Nombre = "Alejandro", Edad = 27};
 
-        Console.WriteLine($"Nombre: {alumno.Nombre} {alumno.Apellidos}");
-        Console.WriteLine($"Edad: {alumno.Edad}");  
+        Console.WriteLine($"Nombre: {alumno.Nombre} - Edad: {alumno.Edad}");
+        Transformar(alumno);
+        Console.WriteLine($"Nombre: {alumno.Nombre} - Edad: {alumno.Edad}");
+    }
 
-        Console.WriteLine($"Nombre Completo: {alumno.NombreCompleto}");  
+    static void Transformar(Alumno alumno){
+        alumno.Edad = 40;
+        Console.WriteLine($"Ahora la edad es: {alumno.Edad}");
     }
 }

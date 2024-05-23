@@ -39,4 +39,34 @@ public class Alumno{
             else edad = value;
         }
     }
+
+    // Miembro: Método Constructor, se ejecuta cuando se instancia el objeto
+    // Es public, no tiene tipo (no retorna nada) y se llama igual que la clase
+    public Alumno(){}
+
+    // Sobrecarga del constructor
+    public Alumno(string nombre, string apellidos){
+        this.nombre = nombre;
+        this.Apellidos = apellidos;
+    }
+
+    // Sobrecarga del constructor
+    public Alumno(string nombre, int edad){
+        this.nombre = nombre;
+        this.edad = edad;
+    }
+
+    // Miembro: Métodos con tipo VOID, no retorna nada
+    public void MetodoUno(){
+
+    }
+
+    // Miembro: Métodos con un tipo de datos (Ejemplo un bool), que siempre retorna ese tipo de dato
+    public bool MetodoDos(){
+        return true;
+    }
+
+    public bool MetodoTres(int param1, string param2, float param3 = 0, string param4 = "valor por defecto"){
+        return true;
+    }
 }
