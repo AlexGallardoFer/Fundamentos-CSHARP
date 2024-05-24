@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace Formacion.CSharp.ConsoleApp2.Models;
 
 public class Alumno{
@@ -25,7 +27,11 @@ public class Alumno{
     }
 
     // Miembro: Propiedades que se comporta como una variable pública
-    public string Apellidos{get; set;}
+    public string Apellidos { get; set; }
+
+    public Dias DiaTutoria { get; set; }
+
+    public Estados Estado { get; set; }
 
     // Miembro: Propiedad de solo lectura, no asociada a una variable
     public string NombreCompleto{
@@ -54,6 +60,18 @@ public class Alumno{
     public Alumno(string nombre, int edad){
         this.nombre = nombre;
         this.edad = edad;
+    }
+
+    // Miembro: Destructor
+    // No se le puede llamar, se ejecuta automáticamente
+    // No tiene parámetros, no tiene tipo y se llama igual que la clase
+    // Comienza por ~ (Alt+0126 o AltGr+4)
+    ~Alumno()
+    {
+        Debug.WriteLine("Se ejecutó el destructor de Alumno");
+        this.nombre = null;
+        this.Apellidos = null;
+        this.edad=0;
     }
 
     // Miembro: Métodos con tipo VOID, no retorna nada
