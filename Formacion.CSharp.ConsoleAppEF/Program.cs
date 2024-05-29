@@ -1,4 +1,5 @@
-﻿using Formacion.CSharp.ConsoleAppEF.Models;
+﻿using Azure.Core;
+using Formacion.CSharp.ConsoleAppEF.Models;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -9,7 +10,10 @@ namespace Formacion.CSharp.ConsoleAppEF
         static void Main(string[] args)
         {
             //ConsultaConADONET();
-            ConsultaConEF();
+            //ConsultaConEF();
+            //InsertarDatos();
+            //ActualizarDatos();
+            EliminarDatos();
         }
 
         /// <summary>
@@ -98,12 +102,117 @@ namespace Formacion.CSharp.ConsoleAppEF
             var clientes = context.Customers
                 .ToList();
 
+            var clientes2 = from x in context.Customers
+                            select x;
+
             foreach (var cliente in clientes)
             {
                 Console.Write($"{cliente.CustomerID.PadLeft(5, ' ')}# ");
                 Console.Write($"{cliente.CompanyName.PadRight(40, ' ')} ");
                 Console.WriteLine($"{cliente.Country}");
             }
+        }
+
+        static void InsertarDatos()
+        {
+            var context = new NorthwindContext();
+
+            var cliente = new Customer()
+            {
+                CustomerID = "AGF01",
+                CompanyName = "Empresa Alex. G",
+                ContactName = "Alejandro Gallardo",
+                ContactTitle = "CEO",
+                Address = "Calle Desengaño, 21",
+                Region = "Granada",
+                City = "Granada",
+                Country = "España",
+                Phone = "900 900 901",
+                Fax = "900 900 911"
+            };
+
+            // Método 1
+            //context.Entry(cliente).State = Microsoft.EntityFrameworkCore.EntityState.Added;
+
+            // Método 2
+            context.Customers.Add( cliente );
+            context.SaveChanges();
+
+            Console.WriteLine("Registro insertado correctamente.");
+        }
+
+        static void ActualizarDatos()
+        {
+            var context = new NorthwindContext();
+
+            // Opción A
+            // Recuperamos el cliente de la base de datos, modificamos valores de las propiedades y grabamos cambios.
+
+            var cliente = context.Customers
+                .Where(x => x.CustomerID == "AGF01")
+                .FirstOrDefault();
+
+            if (cliente == null) Console.WriteLine("NO existe el cliente.");
+            else
+            {
+                cliente.ContactName = "Alex. G";
+                cliente.PostalCode = "28115";
+                context.SaveChanges();
+
+                Console.WriteLine("Actualizado correctamente");
+            }
+            // Opción B
+            // Instanciamos un objeto que representa un registro que existe en la base de datos
+            // pero con valores diferentes y lo utilizamos para actualizar
+
+            var context2 = new NorthwindContext();
+
+            var cliente2 = new Customer()
+            {
+                CustomerID = "AGF01",
+                CompanyName = "Empresa Alex. G",
+                ContactName = "Alex. G",
+                ContactTitle = "CEO",
+                Address = "Calle Desengaño, 21",
+                Region = "Granada",
+                City = "Granada",
+                PostalCode = "28115",
+                Country = "España",
+                Phone = "900 900 901",
+                Fax = "900 900 911"
+            };
+
+            // Método 1
+            //context2.Entry(cliente2).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            //context2.SaveChanges();
+
+            // Método 2
+            context2.Customers.Update( cliente2 );
+            context2.SaveChanges();
+        }
+
+        static void EliminarDatos()
+        {
+            var context = new NorthwindContext();
+
+            // Opción A
+            var cliente = context.Customers
+                .Where(x => x.CustomerID == "AGF01")
+                .FirstOrDefault();
+
+            if (cliente == null) Console.WriteLine("No existe el cliente.");
+            else
+            {
+                context.Customers.Remove(cliente);
+                context.SaveChanges();
+
+                Console.WriteLine("Registro eliminado correctamente.");
+            }
+
+            // Opción B
+            var cliente2 = new Customer() { CustomerID = "AGF01" };           
+            context.Entry(cliente2).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
+            context.SaveChanges();
         }
     }
 }

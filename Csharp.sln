@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Formacion.CSharp.ConsoleApp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Formacion.CSharp.ConsoleApp4", "Formacion.CSharp.ConsoleApp4\Formacion.CSharp.ConsoleApp4.csproj", "{1066E169-F223-42EA-92A9-F19C0BD3F91F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Formacion.CSharp.ConsoleAppEF", "Formacion.CSharp.ConsoleAppEF\Formacion.CSharp.ConsoleAppEF.csproj", "{5141146B-3D68-4B65-9E2D-7C7F27415395}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Formacion.CSharp.ConsoleAppEF", "Formacion.CSharp.ConsoleAppEF\Formacion.CSharp.ConsoleAppEF.csproj", "{5141146B-3D68-4B65-9E2D-7C7F27415395}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Formacion.CSharp.Ejercicios.ConsoleAppEF", "Formacion.CSharp.Ejercicios.ConsoleAppEF\Formacion.CSharp.Ejercicios.ConsoleAppEF.csproj", "{94B9D012-C2D2-4509-B0BF-ADD2A0295291}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{5141146B-3D68-4B65-9E2D-7C7F27415395}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5141146B-3D68-4B65-9E2D-7C7F27415395}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5141146B-3D68-4B65-9E2D-7C7F27415395}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94B9D012-C2D2-4509-B0BF-ADD2A0295291}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94B9D012-C2D2-4509-B0BF-ADD2A0295291}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94B9D012-C2D2-4509-B0BF-ADD2A0295291}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94B9D012-C2D2-4509-B0BF-ADD2A0295291}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
