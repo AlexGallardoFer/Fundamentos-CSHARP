@@ -231,7 +231,7 @@ namespace Formacion.CSharp.ConsoleAppEF
 
             foreach (var empleado in empleados)
             {
-                var pedidos = context.Orders
+                var orders = context.Orders
                     .Where(x => x.EmployeeID == empleado.EmployeeID);
             }
 
@@ -252,16 +252,116 @@ namespace Formacion.CSharp.ConsoleAppEF
 
             // Opción D, nuevas versiones (dentro del select al pedirlo te lo da también)
             var empleados4 = context.Employees
-                .Select(x => new
-                {
+                .Select(x => new{
                     x.EmployeeID,
                     x.FirstName,
                     x.LastName,
                     x.Orders
                 });
 
-            foreach (var empleado in empleados4)
-                Console.WriteLine($"{empleado.FirstName} {empleado.LastName} - {empleado.Orders.Count} pedidos");
+            //foreach (var empleado in empleados4)
+            //    Console.WriteLine($"{empleado.FirstName} {empleado.LastName} - {empleado.Orders.Count} pedidos");
+
+
+            // Ejercicio rápido
+            // Listar productos de las categorías Condiments y SeaFood
+
+            var categorias = new List<string>() { "condiments", "seafood" };
+
+            var productos = context.Products
+                .Include(x => x.Category)
+                .Where(x => categorias.Contains(x.Category.CategoryName.ToLower()));
+
+            //foreach (var producto in productos)
+                //Console.WriteLine($"{producto.ProductName.PadRight(40, ' ')} {producto.Category.CategoryName}");
+
+
+            // Ejercicio rápido 2
+            // Partiendo de Orders -> Listado de pedidos de clientes de USA
+
+            var pedidos = context.Orders
+                .Include(x => x.Customer)
+                .Where(x => x.Customer.Country.ToLower() == "usa");
+
+            //foreach (var pedido in pedidos)
+            //    Console.WriteLine($"{pedido.OrderID.ToString().PadLeft(5, ' ')}# {pedido.Customer.CompanyName.PadLeft(30, ' ')} - {pedido.Customer.Country.PadLeft(20, ' ')}");
+
+            ///////////////////////////////////////////////
+            // INTERSECT: Intersección entre 2 consultas
+            ///////////////////////////////////////////////
+
+            // Opción A
+            var c1 = context.Order_Details
+                .Include(x => x.Order)
+                .Where(x => x.ProductID == 57)
+                .Select(x => x.Order.CustomerID)
+                .ToList();
+
+            var c2 = context.Order_Details
+                .Include(x => x.Order)
+                .Where(x => x.ProductID == 72 && x.Order.OrderDate.Value.Year == 1997)
+                .Select(x => x.Order.CustomerID)
+                .ToList();
+
+            var c3 = c1.Intersect(c2);
+
+            //foreach (var cliente in c3)
+            //    Console.WriteLine(cliente);
+            //Console.WriteLine("");
+
+            // Opción B
+            var customers = context.Order_Details
+                .Include(x => x.Order)
+                .Where(x => x.ProductID == 57)
+                .Select(x => x.Order.CustomerID)
+                .Intersect(context.Order_Details
+                    .Include(x => x.Order)
+                    .Where(x => x.ProductID == 72 && x.Order.OrderDate.Value.Year == 1997)
+                    .Select(x => x.Order.CustomerID));
+
+            //foreach (var cliente in c3)
+            //    Console.WriteLine(cliente);
+
+            ///////////////////////////////////////////////
+            // GROUP BY
+            ///////////////////////////////////////////////
+
+            // SELECT Country, COUNT(*) FROM db.Customers GROUP BY Country
+
+            var clientes = context.Customers
+                .AsEnumerable()
+                .GroupBy(g => g.Country)        // La Key es el campo por el que agrupamos
+                .Select(g => g)
+                .ToList();                      // En cada posición de la lista tenemos un grupo
+                                                // Los grupos son colecciones de los elementos de ese grupo
+
+            //foreach (var grupo in clientes)
+            //{
+            //    Console.WriteLine($"Clave del Grupo: {grupo.Key}");
+            //    Console.WriteLine($"Elementos del Grupo: {grupo.Count()}");
+
+            //    foreach (var elemento in grupo)
+            //        Console.WriteLine($" -> {elemento.CustomerID}# - {elemento.CompanyName}");
+            //    Console.WriteLine("");
+            //}
+
+            // SELECT OrderID, SUM(UnitPrice * Quantity) FROM db.OrderDetails GROUP BY OrderID
+
+            var orders2 = context.Order_Details
+                .AsEnumerable()
+                .GroupBy(g => g.OrderID)
+                .Select(g => new { OrderID = g.Key, Total = g.Sum(x => x.UnitPrice * x.Quantity) })
+                .ToList();
+
+            foreach (var order in orders2)
+                Console.WriteLine($"{order.OrderID.ToString().PadLeft(6, ' ')} - {order.Total.ToString("N2").PadLeft(10, ' ')}");
+
+
+            ///////////////////////////////////////////////
+            // USESQLSERVER
+            ///////////////////////////////////////////////
+
+            var data = context.Database.ExecuteSqlRaw("SELECT * FROM dbo.Customers");
         }
     }
 }
