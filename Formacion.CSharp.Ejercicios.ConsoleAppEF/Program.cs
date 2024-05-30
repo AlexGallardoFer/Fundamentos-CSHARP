@@ -1,4 +1,5 @@
 ﻿using Formacion.CSharp.Ejercicios.ConsoleAppEF.Models;
+using System.Globalization;
 
 namespace Formacion.CSharp.Ejercicios.ConsoleAppEF
 {
@@ -137,7 +138,7 @@ namespace Formacion.CSharp.Ejercicios.ConsoleAppEF
             var ids = new List<int>() { 1, 3, 5 };
             
             var productos = context.Products
-                .Where(x => x.UnitsInStock > 0 && ids.Contains(Convert.ToInt32(x.SupplierID)))
+                .Where(x => x.UnitsInStock > 0 && ids.Contains((int)x.SupplierID))
                 .ToList();
 
             foreach (var producto in productos)
@@ -219,7 +220,7 @@ namespace Formacion.CSharp.Ejercicios.ConsoleAppEF
             var ids = new List<int>() { 1, 3, 4, 8 };
 
             var pedidos = context.Orders
-                .Where(x => ids.Contains(Convert.ToInt32(x.EmployeeID)) && (x.OrderDate.HasValue ? x.OrderDate.Value: DateTime.MinValue).Year == año)
+                .Where(x => ids.Contains((int)x.EmployeeID) && (x.OrderDate.HasValue ? x.OrderDate.Value: DateTime.MinValue).Year == año)
                 .ToList();
 
             foreach (var pedido in pedidos)
@@ -323,14 +324,13 @@ namespace Formacion.CSharp.Ejercicios.ConsoleAppEF
 
             var productos = context.Products
                 .OrderBy(x => x.UnitPrice)
+                .Take(10)
                 .ToList();
 
-            int tamaño = (productos.Count <= 10)? productos.Count : 10;
-
-            for (int i = 0; i < tamaño; i++)
+            foreach (var producto in productos)
             {
-                Console.Write($"{productos[i].ProductID.ToString().PadLeft(5, ' ')}# ");
-                Console.WriteLine($"Precio: {productos[i].UnitPrice.Value.ToString("N2")}$");
+                Console.Write($"{producto.ProductID.ToString().PadLeft(5, ' ')}# ");
+                Console.WriteLine($"Precio: {producto.UnitPrice.Value.ToString("N2")}$");
             }
         }
 
@@ -349,14 +349,13 @@ namespace Formacion.CSharp.Ejercicios.ConsoleAppEF
             var productos = context.Products
                 .Where(x => x.UnitsInStock > 0)
                 .OrderByDescending(x => x.UnitPrice)
+                .Take(10)
                 .ToList();
 
-            int tamaño = (productos.Count <= 10) ? productos.Count : 10;
-
-            for (int i = 0; i < tamaño; i++)
+            foreach (var producto in productos)
             {
-                Console.Write($"{productos[i].ProductID.ToString().PadLeft(5, ' ')}# ");
-                Console.WriteLine($"Precio: {productos[i].UnitPrice.Value.ToString("N2")}$");
+                Console.Write($"{producto.ProductID.ToString().PadLeft(5, ' ')}# ");
+                Console.WriteLine($"Precio: {producto.UnitPrice.Value.ToString("N2")}$");
             }
         }
 
@@ -366,7 +365,7 @@ namespace Formacion.CSharp.Ejercicios.ConsoleAppEF
             // Listado de Cliente de UK y nombre de empresa que comienza por B
             /////////////////////////////////////////////////////////////////////////////////
 
-            // SELECT * FROM dbo.Customers WHERE CompanyName LIKE 'B%' AND Country = 'Uk'
+            // SELECT * FROM dbo.Customers WHERE CompanyName LIKE 'B%' AND Country = 'UK'
 
             Console.WriteLine("\n-------------------------Ejercicio 14-------------------------");
 
@@ -375,7 +374,7 @@ namespace Formacion.CSharp.Ejercicios.ConsoleAppEF
             string comienzo = "B";
 
             var clientes = context.Customers
-                .Where(x => x.Country == "UK" && x.CompanyName.StartsWith(comienzo))
+                .Where(x => x.Country.ToUpper() == "UK" && x.CompanyName.ToUpper().StartsWith(comienzo))
                 .ToList();
 
             foreach (var cliente in clientes)
@@ -401,8 +400,9 @@ namespace Formacion.CSharp.Ejercicios.ConsoleAppEF
             var ids = new List<int>() { 3, 5 };
 
             var productos = context.Products
-                .Where(x => ids.Contains(Convert.ToInt32(x.CategoryID)))
-                .ToList();
+                .Where(x => ids.Contains((int)x.CategoryID))
+                .Take(10)
+                .ToList();                
 
             foreach (var producto in productos)
             {
@@ -427,7 +427,9 @@ namespace Formacion.CSharp.Ejercicios.ConsoleAppEF
             var total = context.Products
                 .Sum(x => x.UnitsInStock * x.UnitPrice);
 
-            Console.WriteLine($"Importe total del stock: {total.Value.ToString("N2")}$");
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            var euro = new CultureInfo("es-ES");
+            Console.WriteLine($"Importe total del stock: {Convert.ToDecimal(total).ToString("C2", euro)}");
         }
 
         static void Ejercicio17()
@@ -447,18 +449,34 @@ namespace Formacion.CSharp.Ejercicios.ConsoleAppEF
             var context = new NorthwindContext();
 
             // Mi método
-            var clientes = context.Customers
+            var ids = context.Customers
                 .Where(x => x.Country == "Argentina")
                 .Select(x => x.CustomerID)
                 .ToList();
-            
+
             var pedidos = context.Orders
-                .Where(x => clientes.Distinct().Contains(x.CustomerID))
+                .Where(x => ids.Distinct().Contains(x.CustomerID))
                 .OrderBy(x => x.CustomerID)
                 .ToList();
 
-            // Método de Borja
-            // TO DO
+            // Método de Borja 
+
+            //var ids2 = context.Customers
+            //    .Where(x => x.Country.ToLower() == "argentina")
+            //    .Select(x=> x.CustomerID)
+            //    .ToList();
+
+            //var pedidos2 = context.Orders
+            //    .Where(x => ids.Contains(x.CustomerID))
+            //    .ToList();
+
+
+            //var pedidos3 = context.Orders
+            //    .Where(x => context.Customers
+            //        .Where(s => s.Country.ToLower() == "argentina")
+            //        .Select(s => s.CustomerID)
+            //        .ToList().Contains(x.CustomerID))
+            //    .ToList();
 
             foreach (var pedido in pedidos)
             {

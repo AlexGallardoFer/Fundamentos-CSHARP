@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using Formacion.CSharp.ConsoleAppEF.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -13,7 +14,8 @@ namespace Formacion.CSharp.ConsoleAppEF
             //ConsultaConEF();
             //InsertarDatos();
             //ActualizarDatos();
-            EliminarDatos();
+            //EliminarDatos();
+            SentenciasAvanzadas();
         }
 
         /// <summary>
@@ -213,6 +215,53 @@ namespace Formacion.CSharp.ConsoleAppEF
             var cliente2 = new Customer() { CustomerID = "AGF01" };           
             context.Entry(cliente2).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
             context.SaveChanges();
+        }
+
+        static void SentenciasAvanzadas()
+        {
+            var context = new NorthwindContext();
+
+            // INCLUDE
+
+            // Listado de Empleados(nombre y apellidos) y listado de pedidos gestionados
+
+            // Opción A
+            var empleados = context.Employees
+                .Select(x => new { x.EmployeeID, x.FirstName, x.LastName });
+
+            foreach (var empleado in empleados)
+            {
+                var pedidos = context.Orders
+                    .Where(x => x.EmployeeID == empleado.EmployeeID);
+            }
+
+            // Opción B
+            var empleados2 = context.Employees
+                .Select(x => new
+                {
+                    x.EmployeeID,
+                    x.FirstName,
+                    x.LastName,
+                    Pedidos = context.Orders.Where(s => s.EmployeeID == x.EmployeeID)
+                });
+
+            // Opción C con INCLUDE
+            var empleados3 = context.Employees
+                .Include(x => x.Orders)
+                .Select(x => x);
+
+            // Opción D, nuevas versiones (dentro del select al pedirlo te lo da también)
+            var empleados4 = context.Employees
+                .Select(x => new
+                {
+                    x.EmployeeID,
+                    x.FirstName,
+                    x.LastName,
+                    x.Orders
+                });
+
+            foreach (var empleado in empleados4)
+                Console.WriteLine($"{empleado.FirstName} {empleado.LastName} - {empleado.Orders.Count} pedidos");
         }
     }
 }
