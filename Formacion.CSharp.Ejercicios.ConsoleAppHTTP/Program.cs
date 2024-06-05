@@ -91,7 +91,11 @@ namespace Formacion.CSharp.Ejercicios.ConsoleAppHTTP
             Console.Write("Escribe una IP: ");
             string ip = Console.ReadLine();
 
-            HttpResponseMessage response = http.GetAsync($"http://ip-api.com/json/{ip}").Result;
+            // Comprobar que se trata de una dirección IP mediante una expresión regular
+            // 0-255.0-255.0-255.0-255
+            //---------------------------------//
+
+            var response = http.GetAsync($"http://ip-api.com/json/{ip}").Result;
 
             if (response.IsSuccessStatusCode)
             {
@@ -161,8 +165,8 @@ namespace Formacion.CSharp.Ejercicios.ConsoleAppHTTP
         public string RegionName { get; set; }
         public string City { get; set; }
         public string Zip { get; set; }
-        public float Lat { get; set; }
-        public float Lon { get; set; }
+        public decimal Lat { get; set; }
+        public decimal Lon { get; set; }
         public string TimeZone { get; set; }
         public string Isp { get; set; }
         public string Org { get; set; }
